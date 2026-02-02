@@ -7,13 +7,24 @@ export const createProduct = async (
     next: NextFunction,
 ) => {
     try {
-        const { title, description, price, published } = req.body;
+        const {
+            title,
+            description,
+            price,
+            published,
+            image,
+            features,
+            categoryName,
+        } = req.body;
         const product = await prisma.product.create({
             data: {
                 title,
                 description,
                 price,
                 published,
+                image,
+                features,
+                categoryName,
             },
         });
         res.status(201).json({ success: true, data: product });
@@ -57,6 +68,9 @@ export const getProductById = async (
                 description: true,
                 price: true,
                 published: true,
+                image: true,
+                features: true,
+                categoryName: true,
             },
         });
         res.status(200).json({ success: true, data: product });
@@ -72,7 +86,15 @@ export const updateProduct = async (
 ) => {
     try {
         const { id } = req.params;
-        const { title, description, price, published } = req.body;
+        const {
+            title,
+            description,
+            price,
+            published,
+            image,
+            features,
+            categoryName,
+        } = req.body;
         if (!id) {
             res.status(400).json({
                 success: false,
@@ -87,6 +109,9 @@ export const updateProduct = async (
                 description,
                 price,
                 published,
+                image,
+                features,
+                categoryName,
             },
         });
         res.status(200).json({ success: true, data: updatedProduct });

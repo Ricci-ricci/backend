@@ -6,20 +6,39 @@ import prisma from "./utils/prisma.js";
 import authRoute from "./routes/auth.route.js";
 import helmet from "helmet";
 import cors from "cors";
+import path from "path";
 import { errorHandler } from "./middleware/errorhandler.js";
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
 // Middlewares de sécurité
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                imgSrc: ["'self'", "http://localhost:4000", "data:"],
+            },
+        },
+    }),
+);
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+});
+
 app.use(
     cors({
-        origin: "https://localhost:4000",
+        origin: "http://localhost:4000",
         methods: ["GET", "POST", "PUT", "DELETE"],
     }),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const uploadsPath = path.join(process.cwd(), "uploads");
+console.log(`[+] Serving static files from: ${uploadsPath}`);
+app.use("/uploads", express.static(uploadsPath));
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/auth", authRoute);
