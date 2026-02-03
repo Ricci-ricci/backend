@@ -14,14 +14,10 @@ const PORT = process.env.PORT || 3000;
 // Middlewares de sécurité
 app.use(
     helmet({
-        contentSecurityPolicy: {
-            directives: {
-                defaultSrc: ["'self'"],
-                imgSrc: ["'self'", "http://localhost:4000", "data:"],
-            },
-        },
+        contentSecurityPolicy: false,
     }),
 );
+
 app.use((req, res, next) => {
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     next();
@@ -29,10 +25,13 @@ app.use((req, res, next) => {
 
 app.use(
     cors({
-        origin: "http://localhost:4000",
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        origin: (origin, callback) => {
+            callback(null, true); // allow ALL origins in dev
+        },
+        credentials: true,
     }),
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
