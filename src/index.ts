@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express, { type Application } from "express";
-import { userRoute, productRoute } from "./routes/index.js";
+import { userRoute, productRoute, cartRoute } from "./routes/index.js";
 import { type Request, type Response } from "express";
 import prisma from "./utils/prisma.js";
 import authRoute from "./routes/auth.route.js";
@@ -41,6 +41,7 @@ app.use("/uploads", express.static(uploadsPath));
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/cart", cartRoute);
 app.get("/", (req: Request, res: Response) => {
     res.json({ message: "Welcome to E-Commerce API" });
 });
