@@ -14,22 +14,38 @@ import {
     removeCartItemSchema,
     clearCartSchema,
 } from "../schemas/cart.schema.js";
+import { authenticate } from "../middleware/auth.js";
 
 const cartRoute = Router();
 
-// Ajouter un produit au panier
-cartRoute.post("/", validate(addToCartSchema), addToCart);
+// Ajouter un produit au panier (nécessite authentification)
+cartRoute.post("/", authenticate, validate(addToCartSchema), addToCart);
 
-// Obtenir le panier d'un utilisateur
-cartRoute.get("/:userId", validate(getCartSchema), getCart);
+// Obtenir le panier d'un utilisateur (nécessite authentification)
+cartRoute.get("/:userId", authenticate, validate(getCartSchema), getCart);
 
-// Mettre à jour la quantité d'un item dans le panier
-cartRoute.put("/items/:itemId", validate(updateCartItemSchema), updateCartItem);
+// Mettre à jour la quantité d'un item dans le panier (nécessite authentification)
+cartRoute.put(
+    "/items/:itemId",
+    authenticate,
+    validate(updateCartItemSchema),
+    updateCartItem,
+);
 
-// Supprimer un item du panier
-cartRoute.delete("/items/:itemId", validate(removeCartItemSchema), removeCartItem);
+// Supprimer un item du panier (nécessite authentification)
+cartRoute.delete(
+    "/items/:itemId",
+    authenticate,
+    validate(removeCartItemSchema),
+    removeCartItem,
+);
 
-// Vider le panier d'un utilisateur
-cartRoute.delete("/:userId", validate(clearCartSchema), clearCart);
+// Vider le panier d'un utilisateur (nécessite authentification)
+cartRoute.delete(
+    "/:userId",
+    authenticate,
+    validate(clearCartSchema),
+    clearCart,
+);
 
 export default cartRoute;

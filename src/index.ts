@@ -7,6 +7,7 @@ import authRoute from "./routes/auth.route.js";
 import helmet from "helmet";
 import cors from "cors";
 import path from "path";
+import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorhandler.js";
 
 const app: Application = express();
@@ -34,6 +35,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const uploadsPath = path.join(process.cwd(), "uploads");
 console.log(`[+] Serving static files from: ${uploadsPath}`);
