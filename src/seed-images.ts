@@ -183,7 +183,7 @@ async function main() {
 
             // The path accessible via static file server
             const PORT = process.env.PORT || 3000;
-            const imagePath = `http://localhost:${PORT}/uploads/images/${newFilename}`;
+            const imagePath = `https://backend-production-b1af.up.railway.app/uploads/images/${newFilename}`;
 
             await prisma.product.create({
                 data: {
