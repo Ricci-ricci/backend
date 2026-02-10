@@ -1,6 +1,6 @@
 import {} from "express";
 import jwt from "jsonwebtoken";
-import prisma from "../utils/prisma";
+import prisma from "../utils/prisma.js";
 const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key_change_me";
 // Middleware pour vérifier l'authentification
 export const authenticate = async (req, res, next) => {

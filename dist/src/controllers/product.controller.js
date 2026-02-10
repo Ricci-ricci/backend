@@ -1,5 +1,5 @@
 import {} from "express";
-import prisma from "../utils/prisma";
+import prisma from "../utils/prisma.js";
 export const createProduct = async (req, res, next) => {
     try {
         const { title, description, price, published, image, features, categoryName, } = req.body;

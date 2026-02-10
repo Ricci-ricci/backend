@@ -1,5 +1,5 @@
 import {} from "express";
-import prisma from "../utils/prisma";
+import prisma from "../utils/prisma.js";
 // Ajouter un produit au panier
 export const addToCart = async (req, res, next) => {
     try {
