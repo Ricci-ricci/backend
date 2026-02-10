@@ -1,5 +1,5 @@
 import {} from "express";
-import prisma from "@/utils/prisma";
+import prisma from "../utils/prisma";
 export const getAllUsers = async (req, res, next) => {
     try {
         const users = await prisma.user.findMany({

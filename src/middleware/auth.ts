@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import prisma from "@/utils/prisma";
+import prisma from "../utils/prisma";
 
 const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key_change_me";
 

@@ -1,5 +1,5 @@
 import {} from "express";
-import prisma from "@/utils/prisma";
+import prisma from "../utils/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 // Clé secrète pour signer les tokens (à mettre dans ton .env idéalement)

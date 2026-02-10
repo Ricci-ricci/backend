@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
-import prisma from "@/utils/prisma";
+import prisma from "../utils/prisma";
 
 export const createProduct = async (
     req: Request,
