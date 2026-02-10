@@ -8,7 +8,8 @@
         "build": "npx prisma generate && tsc",
         "start": "node dist/src/index.js",
         "dev": "tsx watch src/index.ts",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "seed": "tsx src/seed-images.ts"
     },
     "keywords": [],
     "author": "",
