@@ -1,0 +1,62 @@
+import "dotenv/config";
+import express, {} from "express";
+import { userRoute, productRoute, cartRoute } from "./routes/index.js";
+import {} from "express";
+import prisma from "./utils/prisma.js";
+import authRoute from "./routes/auth.route.js";
+import helmet from "helmet";
+import cors from "cors";
+import path from "path";
+import cookieParser from "cookie-parser";
+import { errorHandler } from "./middleware/errorhandler.js";
+const app = express();
+const PORT = process.env.PORT || 3000;
+// Middlewares de sécurité
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+});
+app.use(cors({
+    origin: (origin, callback) => {
+        callback(null, true); // allow ALL origins in dev
+    },
+    credentials: true,
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+const uploadsPath = path.join(process.cwd(), "uploads");
+console.log(`[+] Serving static files from: ${uploadsPath}`);
+app.use("/uploads", express.static(uploadsPath));
+app.use("/api/users", userRoute);
+app.use("/api/products", productRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/cart", cartRoute);
+app.get("/", (req, res) => {
+    res.json({ message: "Welcome to E-Commerce API" });
+});
+app.use(errorHandler);
+const startServer = async () => {
+    try {
+        // Tester la connexion à la DB
+        await prisma.$connect();
+        console.log("[+] Database connected successfully");
+        app.listen(PORT, () => {
+            console.log(`[+] Server running on http://localhost:${PORT}`);
+        });
+    }
+    catch (error) {
+        console.error("[X] Database connection failed:", error);
+        process.exit(1);
+    }
+};
+// Graceful shutdown
+process.on("SIGINT", async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+});
+startServer();
+//# sourceMappingURL=index.js.map
