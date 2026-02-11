@@ -27,7 +27,17 @@ app.use((req, res, next) => {
 app.use(
     cors({
         origin: (origin, callback) => {
-            callback(null, true); // allow ALL origins in dev
+            const allowlist = [
+                process.env.FRONTEND_ORIGIN,
+                "http://localhost:4000",
+            ].filter(Boolean) as string[];
+
+            // Permet les requêtes sans Origin (ex: curl, health checks)
+            if (!origin) return callback(null, true);
+
+            if (allowlist.includes(origin)) return callback(null, true);
+
+            return callback(new Error(`CORS blocked for origin: ${origin}`));
         },
         credentials: true,
     }),

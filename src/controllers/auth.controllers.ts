@@ -93,10 +93,20 @@ export const login = async (
         );
 
         // 4. Configurer le cookie avec le token
+        //
+        // Important:
+        // - Si ton frontend est sur un autre origin (ex: localhost -> railway.app), le cookie doit être envoyé en cross-site.
+        // - Dans ce cas, il faut: SameSite=None + Secure=true, sinon le navigateur n'enverra pas le cookie sur les requêtes XHR/fetch.
+        // - Le frontend doit aussi faire credentials: "include" (tu l'as déjà).
+        const isCrossSite =
+            !!process.env.FRONTEND_ORIGIN &&
+            process.env.FRONTEND_ORIGIN !== req.headers.origin;
+
         res.cookie("auth_token", token, {
             httpOnly: true, // Le cookie ne peut pas être accédé via JavaScript (protection XSS)
-            secure: process.env.NODE_ENV === "production", // HTTPS seulement en production
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Protection CSRF
+            // SameSite=None exige Secure=true (HTTPS). Railway étant en HTTPS, c'est OK.
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours en millisecondes
             path: "/", // Cookie disponible sur toutes les routes
         });
@@ -126,10 +136,11 @@ export const logout = async (
 ) => {
     try {
         // Supprimer le cookie en le remplaçant par un cookie expiré
+        // On doit utiliser les mêmes attributs que lors du login, sinon le navigateur peut ne pas supprimer le bon cookie.
         res.cookie("auth_token", "", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 0, // Expire immédiatement
             path: "/",
         });
@@ -151,6 +162,7 @@ export const verifyAuth = async (
 ) => {
     try {
         const token = req.cookies.auth_token;
+        console.log(token);
 
         if (!token) {
             res.status(401).json({
