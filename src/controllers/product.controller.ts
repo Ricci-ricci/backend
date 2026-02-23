@@ -67,6 +67,7 @@ export const getProductById = async (
                 title: true,
                 description: true,
                 price: true,
+                rating: true,
                 published: true,
                 image: true,
                 features: true,

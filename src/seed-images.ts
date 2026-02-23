@@ -189,6 +189,7 @@ async function main() {
                     title: title,
                     description: `Experience the best quality with the ${title}. Featuring top-tier materials and design suitable for any occasion.`,
                     price: price,
+                    rating: Math.round(Math.random() * 5 * 10) / 10,
                     stock: Math.floor(Math.random() * 100),
                     published: true,
                     image: imagePath,
