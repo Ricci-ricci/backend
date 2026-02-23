@@ -9,7 +9,8 @@
         "start": "node dist/src/index.js",
         "dev": "tsx watch src/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "seed": "tsx src/seed-images.ts"
+        "seed": "tsx src/seed-images.ts",
+        "faker:products": "tsx src/scripts/faker-products.ts"
     },
     "keywords": [],
     "author": "",
@@ -29,6 +30,7 @@
     },
     "dependencies": {
         "@prisma/client": "6.19",
+        "@faker-js/faker": "^9.0.0",
         "bcryptjs": "^3.0.3",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
