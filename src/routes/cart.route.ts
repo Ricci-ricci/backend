@@ -5,6 +5,7 @@ import {
     updateCartItem,
     removeCartItem,
     clearCart,
+    syncCart,
 } from "../controllers/cart.controller.js";
 import { validate } from "../middleware/validate.js";
 import {
@@ -31,6 +32,9 @@ cartRoute.put(
     validate(updateCartItemSchema),
     updateCartItem,
 );
+
+// Synchroniser le panier invité avec le panier utilisateur
+cartRoute.post("/sync", authenticate, syncCart);
 
 // Supprimer un item du panier (nécessite authentification)
 cartRoute.delete(

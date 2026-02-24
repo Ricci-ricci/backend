@@ -286,3 +286,91 @@ export const clearCart = async (
         next(error);
     }
 };
+
+// Helper function to merge guest cart items
+async function mergeCartItems(userId: string, guestItems: any[]) {
+    let cart = await prisma.cart.findUnique({
+        where: { userId },
+        include: { items: true },
+    });
+
+    if (!cart) {
+        cart = await prisma.cart.create({
+            data: { userId },
+            include: { items: true },
+        });
+    }
+
+    for (const item of guestItems) {
+        const productId = item.productId || item.id;
+        const quantity = item.quantity || 1;
+
+        const existingItem = cart.items.find((i) => i.productId === productId);
+
+        if (existingItem) {
+            // Update quantity
+            await prisma.cartItem.update({
+                where: { id: existingItem.id },
+                data: { quantity: existingItem.quantity + quantity },
+            });
+        } else {
+            // Add new item
+            const product = await prisma.product.findUnique({
+                where: { id: productId },
+            });
+
+            if (product) {
+                await prisma.cartItem.create({
+                    data: {
+                        cartId: cart.id,
+                        productId,
+                        quantity,
+                    },
+                });
+            }
+        }
+    }
+}
+
+// Sync cart (Dedicated endpoint for merging)
+export const syncCart = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    try {
+        const { userId } = req.body;
+        const { guestCart } = req.body;
+
+        if (!userId) {
+            res.status(400).json({
+                success: false,
+                message: "User ID is required",
+            });
+            return;
+        }
+
+        if (guestCart && Array.isArray(guestCart) && guestCart.length > 0) {
+            await mergeCartItems(userId, guestCart);
+        }
+
+        const cart = await prisma.cart.findUnique({
+            where: { userId },
+            include: {
+                items: {
+                    include: {
+                        product: true,
+                    },
+                },
+            },
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Cart synced successfully",
+            data: cart,
+        });
+    } catch (error: any) {
+        next(error);
+    }
+};
