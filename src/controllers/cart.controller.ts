@@ -339,13 +339,13 @@ export const syncCart = async (
     next: NextFunction,
 ) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user?.userId;
         const { guestCart } = req.body;
 
         if (!userId) {
             res.status(400).json({
                 success: false,
-                message: "User ID is required",
+                message: "Unauthorized: User ID is required",
             });
             return;
         }
