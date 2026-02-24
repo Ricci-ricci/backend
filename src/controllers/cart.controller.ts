@@ -8,7 +8,8 @@ export const addToCart = async (
     next: NextFunction,
 ) => {
     try {
-        const { userId, productId, quantity } = req.body;
+        const userId = req.user?.userId as string;
+        const { productId, quantity } = req.body;
 
         // Vérifier si le produit existe
         const product = await prisma.product.findUnique({
@@ -103,7 +104,7 @@ export const getCart = async (
     next: NextFunction,
 ) => {
     try {
-        const { userId } = req.params;
+        const userId = req.user?.userId as string;
 
         if (!userId) {
             res.status(400).json({
@@ -252,8 +253,7 @@ export const clearCart = async (
     next: NextFunction,
 ) => {
     try {
-        const { userId } = req.params;
-
+        const userId = req.user?.userId as string;
         if (!userId) {
             res.status(400).json({
                 success: false,
