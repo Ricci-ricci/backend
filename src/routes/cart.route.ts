@@ -23,7 +23,7 @@ const cartRoute = Router();
 cartRoute.post("/", authenticate, validate(addToCartSchema), addToCart);
 
 // Obtenir le panier d'un utilisateur (nécessite authentification)
-cartRoute.get("/:userId", authenticate, validate(getCartSchema), getCart);
+cartRoute.get("/", authenticate, validate(getCartSchema), getCart);
 
 // Mettre à jour la quantité d'un item dans le panier (nécessite authentification)
 cartRoute.put(
@@ -45,11 +45,6 @@ cartRoute.delete(
 );
 
 // Vider le panier d'un utilisateur (nécessite authentification)
-cartRoute.delete(
-    "/:userId",
-    authenticate,
-    validate(clearCartSchema),
-    clearCart,
-);
+cartRoute.delete("/", authenticate, validate(clearCartSchema), clearCart);
 
 export default cartRoute;
